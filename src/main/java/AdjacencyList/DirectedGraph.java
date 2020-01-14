@@ -7,6 +7,7 @@ import Abstraction.AbstractListGraph;
 import GraphAlgorithms.GraphTools;
 import Nodes.DirectedNode;
 import Abstraction.IDirectedGraph;
+import Nodes.UndirectedNode;
 
 public class DirectedGraph<A extends DirectedNode> extends AbstractListGraph<A> implements IDirectedGraph<A> {
 
@@ -68,19 +69,24 @@ public class DirectedGraph<A extends DirectedNode> extends AbstractListGraph<A> 
     }
 
     @Override
-    public boolean isArc(A from, A to) {
-    	// A completer
-    	return false;
+    public boolean isArc(A x, A y) {
+        return this.getNodes().get(x.getLabel()).getSuccs().containsKey(this.nodes.get(y.getLabel()));
     }
 
     @Override
-    public void removeArc(A from, A to) {
-    	// A completer
+    public void removeArc(A x, A y) {
+        if(isArc(x,y)){
+            this.getNodes().get(x.getLabel()).getSuccs().remove(this.nodes.get(y.getLabel()));
+            this.getNodes().get(y.getLabel()).getPreds().remove(this.nodes.get(x.getLabel()));
+        }
     }
 
     @Override
-    public void addArc(A from, A to) {
-    	// A completer
+    public void addArc(A x, A y) {
+        if(!isArc(x,y)){
+            this.getNodes().get(x.getLabel()).getSuccs().put(this.nodes.get(y.getLabel()),1);
+            this.getNodes().get(y.getLabel()).getPreds().put(this.nodes.get(x.getLabel()),1);
+        }
     }
 
     //--------------------------------------------------
