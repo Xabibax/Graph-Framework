@@ -1,16 +1,17 @@
 package GraphAlgorithms;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.function.BiConsumer;
 
+import Abstraction.IGraph;
 import AdjacencyList.DirectedGraph;
 import AdjacencyList.DirectedValuedGraph;
 import AdjacencyList.UndirectedValuedGraph;
 import Collection.Triple;
+import Nodes.AbstractNode;
 import Nodes.DirectedNode;
 import Nodes.UndirectedNode;
 
@@ -42,8 +43,74 @@ public class GraphToolsList  extends GraphTools {
 	// 				Methods
 	// ------------------------------------------
 
-	// A completer
-
+	/**
+	 * @param graph, a graph
+	 * @param start, start node
+	 */
+	public static ArrayList<Boolean> parcourProfond(IGraph graph, AbstractNode start){
+		int n = graph.getNbNodes();
+		ArrayList<Boolean> mark = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			mark.add(false);
+		}
+		mark.set(start.getLabel(), true);
+		Stack<AbstractNode> toVisit = new Stack<AbstractNode>();
+		toVisit.push(start);
+		while (!toVisit.empty()) {
+			AbstractNode v = toVisit.pop();
+			ArrayList<AbstractNode> m = new ArrayList<>();
+			if (v.getClass() == UndirectedNode.class) {
+				for (Map.Entry<UndirectedNode, Integer> entry : ((UndirectedNode) v).getNeighbours().entrySet()) {
+					m.add(entry.getKey());
+				}
+			}else {
+				for (Map.Entry<DirectedNode, Integer> entry : ((DirectedNode) v).getSuccs().entrySet()) {
+					m.add(entry.getKey());
+				}
+			}
+			m.forEach((node) -> {
+				if (!mark.get(node.getLabel())) {
+					mark.set(node.getLabel(), true);
+					toVisit.push(node);
+				}
+			});
+		}
+		return mark;
+	}
+	/**
+	 * @param graph, a graph
+	 * @param start, start node
+	 */
+	public static ArrayList<Boolean> parcourEnLargeur(IGraph graph, AbstractNode start){
+		int n = graph.getNbNodes();
+		ArrayList<Boolean> mark = new ArrayList<>();
+		for (int i = 0; i < n; i++) {
+			mark.add(false);
+		}
+		mark.set(start.getLabel(), true);
+		ConcurrentLinkedQueue<AbstractNode> toVisit = new ConcurrentLinkedQueue<>();
+		toVisit.add(start);
+		while (!toVisit.isEmpty()) {
+			AbstractNode v = toVisit.remove();
+			ArrayList<AbstractNode> m = new ArrayList<>();
+			if (v.getClass() == UndirectedNode.class) {
+				for (Map.Entry<UndirectedNode, Integer> entry : ((UndirectedNode) v).getNeighbours().entrySet()) {
+					m.add(entry.getKey());
+				}
+			}else {
+				for (Map.Entry<DirectedNode, Integer> entry : ((DirectedNode) v).getSuccs().entrySet()) {
+					m.add(entry.getKey());
+				}
+			}
+			for (AbstractNode node: m) {
+				if (!mark.get(node.getLabel())) {
+					mark.set(node.getLabel(), true);
+					toVisit.add(node);
+				}
+			}
+		}
+		return mark;
+	}
 
 	public static void main(String[] args) {
 		int[][] Matrix = GraphTools.generateGraphData(10, 20, false, false, true, 100001);
@@ -51,6 +118,16 @@ public class GraphToolsList  extends GraphTools {
 		DirectedGraph<DirectedNode> al = new DirectedGraph<>(Matrix);
 		System.out.println(al);
 
-		// A completer
+		parcourProfond(al, al.getNodeOfList(al.makeNode(1))).forEach((r) -> {
+			System.out.print(parcourProfond(al, al.getNodeOfList(al.makeNode(1))).indexOf(r));
+			System.out.print(" ");
+			System.out.println(r);
+		});
+		parcourEnLargeur(al, al.getNodeOfList(al.makeNode(1))).forEach((r) -> {
+			System.out.print(parcourProfond(al, al.getNodeOfList(al.makeNode(1))).indexOf(r));
+			System.out.print(" ");
+			System.out.println(r);
+		});
+		
 	}
 }

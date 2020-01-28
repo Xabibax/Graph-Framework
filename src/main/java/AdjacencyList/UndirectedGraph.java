@@ -124,7 +124,6 @@ public class UndirectedGraph<A extends UndirectedNode> extends AbstractListGraph
                 matrix[node.getLabel()][i] = node.getNeighbours().containsKey(this.nodes.get(i)) ? 1 : 0;
             }
         }
-           // A completer
         return matrix;
     }
 
@@ -147,7 +146,6 @@ public class UndirectedGraph<A extends UndirectedNode> extends AbstractListGraph
         GraphTools.afficherMatrix(mat);
         UndirectedGraph al = new UndirectedGraph(mat);
         System.out.println(al);
-        // A completer
     }
 
 }

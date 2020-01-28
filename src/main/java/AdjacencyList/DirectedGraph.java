@@ -128,7 +128,7 @@ public class DirectedGraph<A extends DirectedNode> extends AbstractListGraph<A> 
     @Override
     public IDirectedGraph computeInverse() {
         DirectedGraph<A> g = new DirectedGraph<>(this);
-        // A completer
+        // à compléter
         return g;
     }
     
@@ -151,6 +151,5 @@ public class DirectedGraph<A extends DirectedNode> extends AbstractListGraph<A> 
         GraphTools.afficherMatrix(Matrix);
         DirectedGraph al = new DirectedGraph(Matrix);
         System.out.println(al);
-        // A completer
     }
 }
