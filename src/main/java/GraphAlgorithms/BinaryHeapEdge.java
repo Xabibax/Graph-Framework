@@ -57,18 +57,18 @@ public class BinaryHeapEdge<A> {
 	 * @return the index of the child edge with the least weight
 	 */
     private int getBestChildPos(int src) {
-    	int lastIndex = binh.size()-1; 
-        if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
-            return Integer.MAX_VALUE;
-        } else {
-        	// To complete
-        	return Integer.MAX_VALUE;
-        }
+    	int lastIndex = binh.size()-1;
+		if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
+			return Integer.MAX_VALUE;
+		} else {
+			return this.binh.get(2*src +1).getThird() < this.binh.get(2*src + 2).getThird() ?
+					2*src + 1 :
+					2*src + 2;
+		}
     }
 
     private boolean isLeaf(int src) {
-    	// A completer
-    	return false;
+		return 2*src+1 >= this.pos;
     }
 
     
@@ -169,14 +169,17 @@ public class BinaryHeapEdge<A> {
         int min = 2;
         int max = 20;
         while (k > 0) {
-            int rand = min + (int) (Math.random() * ((max - min) + 1));                        
+            int rand = min + (int) (Math.random() * ((max - min) + 1));
+			System.out.print("insert " + rand + " | ");
             jarjarBin.insert(new DirectedNode(k), new DirectedNode(k+30), rand);            
             k--;
         }
         // A completer
-        
-        System.out.println(jarjarBin.test());
-    }
+
+		System.out.println(jarjarBin);
+
+		System.out.println(jarjarBin.test());
+	}
 
 }
 
