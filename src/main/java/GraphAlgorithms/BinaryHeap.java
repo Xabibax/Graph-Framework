@@ -104,13 +104,36 @@ public class BinaryHeap {
         nodes[child] = temp;
     }
 
+    public String toStringTree() {
+
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < pos; i++) {
+            if (i == 0 || i == 1 || i == 3 || i == 7 || i == 15 || i == 31)
+                s.append(("\n"));
+            s.append(nodes[i]).append(", ");
+        }
+        return s.toString();
+    }
     public String toString() {
+
         StringBuilder s = new StringBuilder();
         for (int i = 0; i < pos; i++) {
             s.append(nodes[i]).append(", ");
         }
         return s.toString();
     }
+    public String tab() {
+        StringBuilder s = new StringBuilder();
+        for (int i = 0; i < pos; i++) {
+        s.append(i).append("\t\t| ");
+    }
+        s.append("\n");
+        for (int i = 0; i < pos; i++) {
+        s.append(nodes[i]).append("\t\t, ");
+    }
+        return s.toString();
+
+}
 
     /**
 	 * Recursive test to check the validity of the binary heap
@@ -136,8 +159,9 @@ public class BinaryHeap {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         BinaryHeap jarjarBin = new BinaryHeap();
+        System.out.println("jarjarBin is empty ? : ");
         System.out.println(jarjarBin.isEmpty()+"\n");
         int k = 20;
         int m = k;
@@ -145,12 +169,17 @@ public class BinaryHeap {
         int max = 20;
         while (k > 0) {
             int rand = min + (int) (Math.random() * ((max - min) + 1));
-            System.out.print("insert " + rand);
+            System.out.print("insert " + rand + " | ");
             jarjarBin.insert(rand);            
             k--;
         }
      // A completer
-        System.out.println("\n" + jarjarBin);
+        System.out.println("\n" + jarjarBin.toStringTree());
+
+        jarjarBin.remove();
+        System.out.println("\n" + jarjarBin.toStringTree());
+
+        System.out.println("jarjarBin test : ");
         System.out.println(jarjarBin.test());
     }
 
