@@ -95,9 +95,12 @@ public class BinaryHeapEdge<A> {
 		if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
 			return Integer.MAX_VALUE;
 		} else {
-			return this.binh.get(2*src +1).getThird() < this.binh.get(2*src + 2).getThird() ?
-					2*src + 1 :
-					2*src + 2;
+			if (2*src+1 < this.binh.size())
+				return this.binh.get(2*src +1).getThird() < this.binh.get(2*src + 2).getThird() ?
+						2*src + 1 :
+						2*src + 2;
+			else
+				return this.binh.get(2*src+1).getThird();
 		}
     }
 
@@ -215,12 +218,12 @@ public class BinaryHeapEdge<A> {
         int m = k;
         int min = 2;
         int max = 20;
-        while (k > 0) {
-            int rand = min + (int) (Math.random() * ((max - min) + 1));
+		while (k > 0) {
+			int rand = min + (int) (Math.random() * ((max - min) + 1));
 			System.out.print("insert " + rand + " | ");
-            jarjarBin.insert(new DirectedNode(k), new DirectedNode(k+30), rand);            
-            k--;
-        }
+			jarjarBin.insert(new DirectedNode(k), new DirectedNode(k+30), rand);
+			k--;
+		}
 		System.out.println("");
 
 		System.out.println(jarjarBin);
@@ -228,6 +231,28 @@ public class BinaryHeapEdge<A> {
 
 		jarjarBin.remove();
 		jarjarBin.lovelyPrinting();
+		k = 10;
+		List<DirectedNode> jarjarBinList = new ArrayList<>();
+		List<Triple<DirectedNode, DirectedNode, Integer>> jarjarBinListTriple = new ArrayList<>();
+		while (k > 0) {
+			int rand = min + (int) (Math.random() * ((max - min) + 1));
+			System.out.print("insert " + rand + " | ");
+			jarjarBinList.add(new DirectedNode(k));
+			jarjarBinList.add(new DirectedNode(k));
+			jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(jarjarBinList.size()-2), jarjarBinList.get(jarjarBinList.size()-1), rand));
+			k--;
+		}
+		BinaryHeapEdge<DirectedNode> lol = new BinaryHeapEdge<>();
+		lol.algoPRIM(jarjarBinList, jarjarBinListTriple, 0);
+		System.out.println("");
+
+		System.out.println(jarjarBin);
+		jarjarBin.lovelyPrinting();
+
+		jarjarBin.remove();
+		jarjarBin.lovelyPrinting();
+
+
 
 		System.out.println(jarjarBin.test());
 	}
