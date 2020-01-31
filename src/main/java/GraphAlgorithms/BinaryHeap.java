@@ -40,8 +40,9 @@ public class BinaryHeap {
         if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
             return Integer.MAX_VALUE;
         } else {
-        	// A completer
-        	return Integer.MAX_VALUE;
+            return this.nodes[2*src +1] < this.nodes[2*src + 2] ?
+                    2*src + 1 :
+                    2*src + 2;
         }
     }
 
