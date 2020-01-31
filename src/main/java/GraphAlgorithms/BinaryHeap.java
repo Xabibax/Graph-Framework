@@ -46,9 +46,35 @@ public class BinaryHeap {
         }
     }
 
-    public int remove() {
-    	// A completer
-    	return 0;
+    public int remove() throws Exception {
+        if (this.pos != 0) {
+            int res = this.nodes[0];
+            if (this.pos == 1) {
+                this.nodes = new int[32];
+                for (int i = 0; i < nodes.length; i++) {
+                    this.nodes[i] = Integer.MAX_VALUE;
+                }
+                this.pos = 0;
+            }
+            else {
+                this.swap(0, --this.pos);
+                this.nodes[pos] = Integer.MAX_VALUE;
+                int currentNode = 0;
+                while (currentNode < this.pos) {
+                    int sonIndex = this.getBestChildPos(currentNode);
+                    if (sonIndex != Integer.MAX_VALUE) {
+                        int sonValue = this.nodes[sonIndex];
+                        if (this.nodes[currentNode] > sonValue) {
+                            this.swap(currentNode, sonIndex);
+                            currentNode = sonIndex;
+                        }
+                    } else
+                        break;
+                }
+            }
+            return res;
+        }
+        throw new Exception("No element in the BinaryHeap.");
     }
 
     private int getBestChildPos(int src) {
