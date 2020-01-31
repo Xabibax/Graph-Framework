@@ -14,11 +14,8 @@ public class BinaryHeapEdge<A> {
 	 */
 	private  List<Triple<A,A,Integer>> binh;
 
-	private int pos;
-
     public BinaryHeapEdge() {
         this.binh = new ArrayList<>();
-		this.pos = 0;
     }
 
     public boolean isEmpty() {
@@ -33,7 +30,23 @@ public class BinaryHeapEdge<A> {
 	 * @param val the edge weight
 	 */
     public void insert(A from, A to, int val) {
-    	// To complete
+    	Triple<A,A,Integer> element = new Triple(from, to, val);
+		if (this.binh.size() == 0)
+			this.binh.add(element);
+		else if (this.binh.size() > 0) {
+			this.binh.add(element);
+			int i = this.binh.size()-1;
+			while (i > 0) {
+				int father = new Double(Math.floor((i - 1) / 2)).intValue();
+				if (this.binh.get(father).getThird() > element.getThird()) {
+					this.swap(father, i);
+					i = father;
+					element = this.binh.get(i);
+				}
+				else
+					break;
+			}
+		}
     }
 
     
@@ -43,11 +56,32 @@ public class BinaryHeapEdge<A> {
 	 * @return the edge with the minimal value (root of the binary heap)
 	 * 
 	 */
-    public Triple<A,A,Integer> remove() {
-    	// To complete
-    	return null;
-        
-    }
+    public Triple<A,A,Integer> remove() throws Exception {
+		if (this.binh.size() != 0) {
+			Triple<A,A,Integer> res = this.binh.get(0);
+			if (this.binh.size() == 1) {
+				res = this.binh.remove(0);
+			}
+			else {
+				this.swap(0, this.binh.size()-1);
+				this.binh.remove(this.binh.size()-1);
+				int currentNodeIndex = 0;
+				while (currentNodeIndex < this.binh.size()-1) {
+					int sonIndex = this.getBestChildPos(currentNodeIndex);
+					if (sonIndex != Integer.MAX_VALUE) {
+						Triple<A,A,Integer> sonValue = this.binh.get(sonIndex);
+						if (this.binh.get(currentNodeIndex).getThird() > sonValue.getThird()) {
+							this.swap(currentNodeIndex, sonIndex);
+							currentNodeIndex = sonIndex;
+						}
+					} else
+						break;
+				}
+			}
+			return res;
+		}
+		throw new Exception("No element in the BinaryHeap.");
+	}
     
 
     /**
@@ -68,7 +102,7 @@ public class BinaryHeapEdge<A> {
     }
 
     private boolean isLeaf(int src) {
-		return 2*src+1 >= this.pos;
+		return 2*src+1 >= this.binh.size();
     }
 
     
@@ -84,22 +118,35 @@ public class BinaryHeapEdge<A> {
     	binh.get(child).setTriple(temp);
     }
 
-    
-    /**
+
+	/**
 	 * Create the string of the visualisation of a binary heap
-	 * 
+	 *
 	 * @return the string of the binary heap
 	 */
-    public String toString() {
-        StringBuilder s = new StringBuilder();
-        for (Triple<A,A,Integer> no: binh) {
-            s.append(no).append(", ");
-        }
-        return s.toString();
-    }
-    
-    
-    private String space(int x) {
+	public String toString() {
+		StringBuilder s = new StringBuilder();
+		for (Triple<A,A,Integer> no: binh) {
+			s.append(no.getThird()).append(", ");
+		}
+		return s.toString();
+	}
+
+	/**
+	 * Create the string of the visualisation of a binary heap
+	 *
+	 * @return the string of the binary heap
+	 */
+	public String toStringNode() {
+		StringBuilder s = new StringBuilder();
+		for (Triple<A,A,Integer> no: binh) {
+			s.append(no).append(", ");
+		}
+		return s.toString();
+	}
+
+
+	private String space(int x) {
 		StringBuilder res = new StringBuilder();
 		for (int i=0; i<x; i++) {
 			res.append(" ");
@@ -161,7 +208,7 @@ public class BinaryHeapEdge<A> {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         BinaryHeapEdge<DirectedNode> jarjarBin = new BinaryHeapEdge<>();
         System.out.println(jarjarBin.isEmpty()+"\n");
         int k = 10;
@@ -174,9 +221,13 @@ public class BinaryHeapEdge<A> {
             jarjarBin.insert(new DirectedNode(k), new DirectedNode(k+30), rand);            
             k--;
         }
-        // A completer
+		System.out.println("");
 
 		System.out.println(jarjarBin);
+		jarjarBin.lovelyPrinting();
+
+		jarjarBin.remove();
+		jarjarBin.lovelyPrinting();
 
 		System.out.println(jarjarBin.test());
 	}
