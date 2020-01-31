@@ -3,7 +3,9 @@ package GraphAlgorithms;
 import java.util.ArrayList;
 import java.util.List;
 
+import Abstraction.IGraph;
 import Collection.Triple;
+import Nodes.AbstractNode;
 import Nodes.DirectedNode;
 
 public class BinaryHeapEdge<A> {
@@ -156,6 +158,27 @@ public class BinaryHeapEdge<A> {
 		}
 		return res.toString();
 	}
+
+	public void algoPRIM(List<DirectedNode> nodes, List<Triple<DirectedNode, DirectedNode, Integer>> listEdge, int start) throws Exception {
+		BinaryHeapEdge<A> tree = new BinaryHeapEdge<>();
+		List<DirectedNode> restingNodes = nodes;
+		int currentNodeIndex = start;
+		do {
+			for (int i = 0; i < listEdge.size(); i++) {
+				if (listEdge.get(i).getFirst().equals(restingNodes.get(currentNodeIndex))) {
+					Triple<A, A, Integer> edge = (Triple<A, A, Integer>) listEdge.get(i);
+					tree.insert(edge.getFirst(), edge.getSecond(), edge.getThird());
+				}
+			}
+			if (!tree.isEmpty()) {
+				Triple<A, A, Integer> minimumEdge = tree.remove();
+				restingNodes.remove(currentNodeIndex);
+				if (listEdge.contains(minimumEdge.getSecond()))
+					currentNodeIndex = listEdge.indexOf(minimumEdge.getSecond());
+				this.insert(minimumEdge.getFirst(),minimumEdge.getSecond(),minimumEdge.getThird());
+			}
+		} while (!restingNodes.isEmpty());
+	}
 	
 	/**
 	 * Print a nice visualisation of the binary heap as a hierarchy tree
@@ -246,15 +269,15 @@ public class BinaryHeapEdge<A> {
 		lol.algoPRIM(jarjarBinList, jarjarBinListTriple, 0);
 		System.out.println("");
 
-		System.out.println(jarjarBin);
-		jarjarBin.lovelyPrinting();
+		System.out.println(lol);
+		lol.lovelyPrinting();
 
-		jarjarBin.remove();
-		jarjarBin.lovelyPrinting();
+		lol.remove();
+		lol.lovelyPrinting();
 
 
 
-		System.out.println(jarjarBin.test());
+		System.out.println(lol.test());
 	}
 
 }
