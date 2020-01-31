@@ -14,8 +14,11 @@ public class BinaryHeapEdge<A> {
 	 */
 	private  List<Triple<A,A,Integer>> binh;
 
+	private int pos;
+
     public BinaryHeapEdge() {
         this.binh = new ArrayList<>();
+		this.pos = 0;
     }
 
     public boolean isEmpty() {
