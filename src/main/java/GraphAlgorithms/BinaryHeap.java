@@ -28,7 +28,22 @@ public class BinaryHeap {
     }
 
     public void insert(int element) {
-    	// A completer
+        if (this.pos == 0)
+            this.nodes[pos ++] = element;
+        else if (this.pos < this.nodes.length) {
+            this.nodes[this.pos] = element;
+            int i = pos;
+            while (i > 0) {
+                int father = new Double(Math.floor((i - 1) / 2)).intValue();
+                if (this.nodes[father] > element) {
+                    this.swap(father, i);
+                    i = father;
+                }
+                else
+                    break;
+            }
+            pos ++;
+        }
     }
 
     public int remove() {
