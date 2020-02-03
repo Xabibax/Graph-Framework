@@ -47,7 +47,7 @@ public class GraphToolsList  extends GraphTools {
 	 * @param graph, a graph
 	 * @param start, start node
 	 */
-	public static ArrayList<Boolean> parcourProfond(IGraph graph, AbstractNode start){
+	public static ArrayList<Boolean> parcourProfond(IGraph graph, AbstractNode start) throws Exception {
 		int n = graph.getNbNodes();
 		ArrayList<Boolean> mark = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
@@ -63,10 +63,12 @@ public class GraphToolsList  extends GraphTools {
 				for (Map.Entry<UndirectedNode, Integer> entry : ((UndirectedNode) v).getNeighbours().entrySet()) {
 					m.add(entry.getKey());
 				}
-			}else {
+			}else if (v.getClass() == DirectedNode.class)  {
 				for (Map.Entry<DirectedNode, Integer> entry : ((DirectedNode) v).getSuccs().entrySet()) {
 					m.add(entry.getKey());
 				}
+			} else {
+				throw new Exception("Unknow node type");
 			}
 			m.forEach((node) -> {
 				if (!mark.get(node.getLabel())) {
@@ -81,7 +83,7 @@ public class GraphToolsList  extends GraphTools {
 	 * @param graph, a graph
 	 * @param start, start node
 	 */
-	public static ArrayList<Boolean> parcourEnLargeur(IGraph graph, AbstractNode start){
+	public static ArrayList<Boolean> parcourEnLargeur(IGraph graph, AbstractNode start) throws Exception {
 		int n = graph.getNbNodes();
 		ArrayList<Boolean> mark = new ArrayList<>();
 		for (int i = 0; i < n; i++) {
@@ -97,10 +99,12 @@ public class GraphToolsList  extends GraphTools {
 				for (Map.Entry<UndirectedNode, Integer> entry : ((UndirectedNode) v).getNeighbours().entrySet()) {
 					m.add(entry.getKey());
 				}
-			}else {
+			}else if (v.getClass() == DirectedNode.class) {
 				for (Map.Entry<DirectedNode, Integer> entry : ((DirectedNode) v).getSuccs().entrySet()) {
 					m.add(entry.getKey());
 				}
+			} else {
+				throw new Exception("Unknow node type");
 			}
 			for (AbstractNode node: m) {
 				if (!mark.get(node.getLabel())) {
@@ -112,22 +116,22 @@ public class GraphToolsList  extends GraphTools {
 		return mark;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		int[][] Matrix = GraphTools.generateGraphData(10, 20, false, false, true, 100001);
 		GraphTools.afficherMatrix(Matrix);
 		DirectedGraph<DirectedNode> al = new DirectedGraph<>(Matrix);
 		System.out.println(al);
 
-		parcourProfond(al, al.getNodeOfList(al.makeNode(1))).forEach((r) -> {
+		for (Boolean aBoolean : parcourProfond(al, al.getNodeOfList(al.makeNode(1)))) {
+			System.out.print(parcourProfond(al, al.getNodeOfList(al.makeNode(1))).indexOf(aBoolean));
+			System.out.print(" ");
+			System.out.println(aBoolean);
+		}
+		for (Boolean r : parcourEnLargeur(al, al.getNodeOfList(al.makeNode(1)))) {
 			System.out.print(parcourProfond(al, al.getNodeOfList(al.makeNode(1))).indexOf(r));
 			System.out.print(" ");
 			System.out.println(r);
-		});
-		parcourEnLargeur(al, al.getNodeOfList(al.makeNode(1))).forEach((r) -> {
-			System.out.print(parcourProfond(al, al.getNodeOfList(al.makeNode(1))).indexOf(r));
-			System.out.print(" ");
-			System.out.println(r);
-		});
-		
+		}
+
 	}
 }

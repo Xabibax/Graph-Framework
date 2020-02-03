@@ -222,7 +222,7 @@ public class GraphTools {
 
 
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		int[][] mat = generateGraphData(10, 20, false, false, false, 100001);
 		afficherMatrix(mat);
 		int[][] mat2 = generateGraphData(10, 20, false, false, false, 100002);
