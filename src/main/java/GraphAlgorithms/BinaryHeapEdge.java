@@ -66,7 +66,7 @@ public class BinaryHeapEdge<A> {
 			}
 			else {
 				this.swap(0, this.binh.size()-1);
-				this.binh.remove(this.binh.size()-1);
+				res = this.binh.remove(this.binh.size()-1);
 				int currentNodeIndex = 0;
 				while (currentNodeIndex < this.binh.size()-1) {
 					int sonIndex = this.getBestChildPos(currentNodeIndex);
@@ -75,7 +75,8 @@ public class BinaryHeapEdge<A> {
 						if (this.binh.get(currentNodeIndex).getThird() > sonValue.getThird()) {
 							this.swap(currentNodeIndex, sonIndex);
 							currentNodeIndex = sonIndex;
-						}
+						} else
+							break;
 					} else
 						break;
 				}
@@ -97,12 +98,12 @@ public class BinaryHeapEdge<A> {
 		if (isLeaf(src)) { // the leaf is a stopping case, then we return a default value
 			return Integer.MAX_VALUE;
 		} else {
-			if (2*src+1 < this.binh.size())
+			if (2*src+2 < this.binh.size())
 				return this.binh.get(2*src +1).getThird() < this.binh.get(2*src + 2).getThird() ?
 						2*src + 1 :
 						2*src + 2;
 			else
-				return this.binh.get(2*src+1).getThird();
+				return 2*src+1;
 		}
     }
 
@@ -159,25 +160,49 @@ public class BinaryHeapEdge<A> {
 		return res.toString();
 	}
 
-	public void algoPRIM(List<DirectedNode> nodes, List<Triple<DirectedNode, DirectedNode, Integer>> listEdge, int start) throws Exception {
+	/**
+	 * Transform this BinaryHeapEdge with the PRIM algorithm
+	 *
+	 * @param nodes the list of all the nodes in the graph
+	 * @param listEdge the list of all the edges in the graph
+	 * @param start the index of the starting node in nodes
+	 */
+	public void algoPRIM(List<A> nodes, List<Triple<A, A, Integer>> listEdge, int start) throws Exception {
+		// I create a tree to stock my Edges //
 		BinaryHeapEdge<A> tree = new BinaryHeapEdge<>();
-		List<DirectedNode> restingNodes = nodes;
-		int currentNodeIndex = start;
-		do {
-			for (int i = 0; i < listEdge.size(); i++) {
-				if (listEdge.get(i).getFirst().equals(restingNodes.get(currentNodeIndex))) {
-					Triple<A, A, Integer> edge = (Triple<A, A, Integer>) listEdge.get(i);
-					tree.insert(edge.getFirst(), edge.getSecond(), edge.getThird());
-				}
+
+		// I add every edge from the current node into the tree
+		for (int i = 0; i < listEdge.size(); i++) {
+			if (listEdge.get(i).getFirst().equals(nodes.get(start))) {
+				Triple<A, A, Integer> edge = (Triple<A, A, Integer>) listEdge.get(i);
+				tree.insert(edge.getFirst(), edge.getSecond(), edge.getThird());
 			}
-			if (!tree.isEmpty()) {
+		}
+
+		// I remove the starting node from the list of nodes
+		nodes.remove(nodes.get(start));
+
+		while (!nodes.isEmpty()) {
+			// I retrieve the minumum edge from the tree
+			if (!tree.binh.isEmpty()) {
 				Triple<A, A, Integer> minimumEdge = tree.remove();
-				restingNodes.remove(currentNodeIndex);
-				if (listEdge.contains(minimumEdge.getSecond()))
-					currentNodeIndex = listEdge.indexOf(minimumEdge.getSecond());
+				if (nodes.contains(minimumEdge.getSecond())) {
+					// I add every edge of the next node
+					for (int i = 0; i < listEdge.size(); i++) {
+						if (listEdge.get(i).getFirst().equals(minimumEdge.getSecond())) {
+							Triple<A, A, Integer> edge = (Triple<A, A, Integer>) listEdge.get(i);
+							tree.insert(edge.getFirst(), edge.getSecond(), edge.getThird());
+						}
+					}
+					// I remove the next node from the list of nodes
+					nodes.remove(minimumEdge.getSecond());
+				}
+				// I insert the minimum Edge to this BinaryHeapEdge
 				this.insert(minimumEdge.getFirst(),minimumEdge.getSecond(),minimumEdge.getThird());
+			} else {
+				break;
 			}
-		} while (!restingNodes.isEmpty());
+		}
 	}
 	
 	/**
@@ -185,21 +210,23 @@ public class BinaryHeapEdge<A> {
 	 * 
 	 */	
 	public void lovelyPrinting(){
-		int nodeWidth = this.binh.get(0).toString().length();
-		int depth = 1+(int)(Math.log(this.binh.size())/Math.log(2));
-		int index=0;
-		
-		for(int h = 1; h<=depth; h++){
-			int left = ((int) (Math.pow(2, depth-h-1)))*nodeWidth - nodeWidth/2;
-			int between = ((int) (Math.pow(2, depth-h))-1)*nodeWidth;
-			int i =0;
-			System.out.print(space(left));
-			while(i<Math.pow(2, h-1) && index<binh.size()){
-				System.out.print(binh.get(index) + space(between));
-				index++;
-				i++;
+		if (!this.binh.isEmpty()) {
+			int nodeWidth = this.binh.get(0).toString().length();
+			int depth = 1 + (int) (Math.log(this.binh.size()) / Math.log(2));
+			int index = 0;
+
+			for (int h = 1; h <= depth; h++) {
+				int left = ((int) (Math.pow(2, depth - h - 1))) * nodeWidth - nodeWidth / 2;
+				int between = ((int) (Math.pow(2, depth - h)) - 1) * nodeWidth;
+				int i = 0;
+				System.out.print(space(left));
+				while (i < Math.pow(2, h - 1) && index < binh.size()) {
+					System.out.print(binh.get(index) + space(between));
+					index++;
+					i++;
+				}
+				System.out.println("");
 			}
-			System.out.println("");
 		}
 		System.out.println("");
 	}
@@ -254,17 +281,23 @@ public class BinaryHeapEdge<A> {
 
 		jarjarBin.remove();
 		jarjarBin.lovelyPrinting();
-		k = 10;
+
 		List<DirectedNode> jarjarBinList = new ArrayList<>();
 		List<Triple<DirectedNode, DirectedNode, Integer>> jarjarBinListTriple = new ArrayList<>();
-		while (k > 0) {
-			int rand = min + (int) (Math.random() * ((max - min) + 1));
-			System.out.print("insert " + rand + " | ");
-			jarjarBinList.add(new DirectedNode(k));
-			jarjarBinList.add(new DirectedNode(k));
-			jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(jarjarBinList.size()-2), jarjarBinList.get(jarjarBinList.size()-1), rand));
-			k--;
-		}
+
+		jarjarBinList.add(new DirectedNode(0));
+		jarjarBinList.add(new DirectedNode(1));
+		jarjarBinList.add(new DirectedNode(2));
+		jarjarBinList.add(new DirectedNode(3));
+		jarjarBinList.add(new DirectedNode(4));
+		jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(0), jarjarBinList.get(1), 3));
+		jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(0), jarjarBinList.get(2), 1));
+		jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(1), jarjarBinList.get(3), 1));
+		jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(2), jarjarBinList.get(1), 1));
+		jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(2), jarjarBinList.get(3), 5));
+		jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(2), jarjarBinList.get(4), 4));
+		jarjarBinListTriple.add(new Triple<>(jarjarBinList.get(3), jarjarBinList.get(4), 4));
+
 		BinaryHeapEdge<DirectedNode> lol = new BinaryHeapEdge<>();
 		lol.algoPRIM(jarjarBinList, jarjarBinListTriple, 0);
 		System.out.println("");
@@ -272,7 +305,6 @@ public class BinaryHeapEdge<A> {
 		System.out.println(lol);
 		lol.lovelyPrinting();
 
-		lol.remove();
 		lol.lovelyPrinting();
 
 

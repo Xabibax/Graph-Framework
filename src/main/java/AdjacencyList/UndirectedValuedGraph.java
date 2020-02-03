@@ -41,7 +41,7 @@ public class UndirectedValuedGraph extends UndirectedGraph<UndirectedNode> {
     public void addEdge(UndirectedNode x, UndirectedNode y, int cost) {
         super.addEdge(x, y);
         if (this.nodes.get(x.getLabel()).getWeight() == 0) this.nodes.get(x.getLabel()).setWeight(cost);
-        if (this.nodes.get(y.getLabel()).getWeight()   == 0) this.nodes.get(y.getLabel()).setWeight(cost);
+        if (this.nodes.get(y.getLabel()).getWeight() == 0) this.nodes.get(y.getLabel()).setWeight(cost);
     }
     
     @Override
@@ -59,7 +59,7 @@ public class UndirectedValuedGraph extends UndirectedGraph<UndirectedNode> {
     }
     
     public static void main(String[] args) {
-        int[][] matrix = GraphTools.generateGraphData(10, 15, false, true, false, 100001);
+        int[][] matrix       = GraphTools.generateGraphData(10, 15, false, true, false, 100001);
         int[][] matrixValued = GraphTools.generateValuedGraphData(10, false, true, true, false, 100001);
         GraphTools.afficherMatrix(matrix);
         GraphTools.afficherMatrix(matrixValued);
