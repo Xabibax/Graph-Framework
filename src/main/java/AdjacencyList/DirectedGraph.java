@@ -9,6 +9,8 @@ import Nodes.DirectedNode;
 import Abstraction.IDirectedGraph;
 import Nodes.UndirectedNode;
 
+import static GraphAlgorithms.GraphToolsList.inversionGraphe;
+
 public class DirectedGraph<A extends DirectedNode> extends AbstractListGraph<A> implements IDirectedGraph<A> {
 
 	private static int _DEBBUG =0;
@@ -127,9 +129,14 @@ public class DirectedGraph<A extends DirectedNode> extends AbstractListGraph<A> 
 
     @Override
     public IDirectedGraph computeInverse() {
-        DirectedGraph<A> g = new DirectedGraph<>(this);
-        // à compléter
-        return g;
+        DirectedGraph<A> result = this;
+        for (int i = 0; i < order; i++)
+            for (int j = 0; j < order; j++)
+                if (nodes.get(i).getSuccs().containsKey(this.nodes.get(j)))
+                    result.removeArc(result.nodes.get(i), result.nodes.get(j));
+                else
+                    result.addArc(result.nodes.get(i), result.nodes.get(j));
+        return result;
     }
     
     @Override

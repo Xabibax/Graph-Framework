@@ -45,4 +45,15 @@ public interface IGraph {
 					explorerSommet(i, a);
 		}
 	}
+
+	/**
+	 * Method to get the adjency matrix of the complement graph
+	 */
+	default int[][] complGraphAdjMatrix() {
+		int[][] result = new int[this.toAdjacencyMatrix().length][this.toAdjacencyMatrix().length];;
+		for (int i = 0; i < this.toAdjacencyMatrix().length; i++)
+			for (int j = 0; j < this.toAdjacencyMatrix()[i].length; j++)
+				result[i][j] = this.toAdjacencyMatrix()[i][j] != 0 ? 0 : 1;
+		return result;
+	}
 }

@@ -1,6 +1,7 @@
 package AdjacencyMatrix;
 
 import Abstraction.AbstractMatrixGraph;
+import AdjacencyList.DirectedGraph;
 import GraphAlgorithms.GraphTools;
 import Nodes.AbstractNode;
 import Nodes.DirectedNode;
@@ -106,8 +107,14 @@ public class AdjacencyMatrixDirectedGraph extends AbstractMatrixGraph<DirectedNo
 
 	@Override
 	public IDirectedGraph<DirectedNode> computeInverse() {
-		// A completer
-		return null;
+		IDirectedGraph<DirectedNode> result = this;
+		for (int i = 0; i < this.matrix.length; i++)
+			for (int j = 0; j < this.matrix.length; j++)
+				if (result.isArc(new DirectedNode(i), new DirectedNode(j)))
+					result.removeArc(new DirectedNode(i), new DirectedNode(j));
+				else
+					result.addArc(new DirectedNode(i), new DirectedNode(j));
+		return result;
 	}
 
 	@Override
