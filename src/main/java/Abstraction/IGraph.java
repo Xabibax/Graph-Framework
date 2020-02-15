@@ -8,10 +8,7 @@ import org.omg.PortableInterceptor.INACTIVE;
 
 import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.Timer;
+import java.util.*;
 
 public interface IGraph {
     /**
@@ -24,17 +21,16 @@ public interface IGraph {
      */
     int[][] toAdjacencyMatrix();
 
-    /**
-     * Method to explore every nodes
+	/**
+	 * Method to explore every nodes in a graph G
 	 * @return an array of the time where every successor of the node were explored
-     */
-    default Long[] explorerGraphe() {
-    	Set<Integer> atteint = new HashSet<>();
+	 */
+	default Long[] explorerGrapheG() {
+		Long startTime = System.currentTimeMillis();
+		Set<Integer> atteint = new HashSet<>();
 		Long[] result = new Long[this.toAdjacencyMatrix().length];
 		// J'initialise le resultat avec la valeur max des long
-		for (int i = 0; i < result.length ; i++) {
-			result[i] = Long.MAX_VALUE;
-		}
+		Arrays.fill(result, Long.MAX_VALUE);
 		Pair<Set<Integer>, Long[]> coupleAtteinResult = new Pair<>(atteint, result);
 		for (int i = 0; i < this.toAdjacencyMatrix().length ; i++) {
 			// Si le sommet n'a pas déjà été exploré je l'explore
@@ -44,8 +40,45 @@ public interface IGraph {
 				result = coupleAtteinResult.getRight();
 			}
 		}
+		Long endTime = result[0];
+		for (int i = 1; i < result.length ; i++) {
+			if (endTime < result[i])
+				endTime = result[i];
+		}
+		System.out.println("L'exploration du graphe complémentaire à duré " + (endTime-startTime) + " nanosecondes");
 		return result;
-    }
+	}
+
+	/**
+	 * Method to explore every nodes in a graph G-1
+	 * @param sortedFinNode, an array containing the node index by decreasing eplored time
+	 * @return an array of the time where every successor of the node were explored
+	 */
+	default Long[] explorerGrapheComplG(int[] sortedFinNode) {
+		Long startTime = System.nanoTime();
+		Set<Integer> atteint = new HashSet<>();
+		Long[] result = new Long[this.toAdjacencyMatrix().length];
+		// J'initialise le resultat avec la valeur max des long
+		Arrays.fill(result, Long.MAX_VALUE);
+		Pair<Set<Integer>, Long[]> coupleAtteinResult = new Pair<>(atteint, result);
+		for (int i = 0; i < this.toAdjacencyMatrix().length ; i++) {
+			// Si le sommet n'a pas déjà été exploré je l'explore
+			if (!atteint.contains(sortedFinNode[i])) {
+				coupleAtteinResult = explorerSommet(sortedFinNode[i], atteint, result);
+				atteint = coupleAtteinResult.getLeft();
+				result = coupleAtteinResult.getRight();
+			}
+		}
+		Long endTime = result[0];
+		for (int i = 1; i < result.length ; i++) {
+			if (endTime < result[i])
+				endTime = result[i];
+		}
+		System.out.println("L'exploration du graphe complémentaire à duré " + (endTime-startTime) + " nanosecondes");
+		// Le résultat retourne un tableau avec le temps final d'exploration
+		// dans l'ordre croissant des indice des noeuds
+		return result;
+	}
 
 	/**
 	 * Method to explore a node
@@ -69,7 +102,7 @@ public interface IGraph {
 		}
 		// Tous les successeurs de ce sommet ont été exploré, je peux donc noté ce moment à partir du temps système
 		if (fin[s] == Long.MAX_VALUE) {
-			fin[s] = System.currentTimeMillis();
+			fin[s] = System.nanoTime();
 			// Je fais attendre le programme pour bien différencier les temps entre les sommets exploré
 			try {
 				Thread.sleep(100);

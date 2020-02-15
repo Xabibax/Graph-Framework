@@ -1,22 +1,15 @@
 package GraphAlgorithms;
 
+import java.lang.reflect.Array;
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.function.BiConsumer;
 
-import Abstraction.IDirectedGraph;
 import Abstraction.IGraph;
 import AdjacencyList.DirectedGraph;
-import AdjacencyList.DirectedValuedGraph;
-import AdjacencyList.UndirectedGraph;
-import AdjacencyList.UndirectedValuedGraph;
-import Collection.Triple;
+import Collection.Pair;
 import Nodes.AbstractNode;
 import Nodes.DirectedNode;
 import Nodes.UndirectedNode;
-import sun.awt.UNIXToolkit;
 
 public class GraphToolsList extends GraphTools {
 
@@ -124,11 +117,10 @@ public class GraphToolsList extends GraphTools {
         int[][] Matrix = GraphTools.generateGraphData(10, 20, false, false, true, 100001);
         GraphTools.afficherMatrix(Matrix);
         DirectedGraph<DirectedNode> al = new DirectedGraph<>(Matrix);
-        //UndirectedGraph<UndirectedNode> al = new UndirectedGraph<>(Matrix);
         System.out.println(al);
 
         int node = 1;
-
+        System.out.println(System.lineSeparator() + "Question 20");
         System.out.println(System.lineSeparator() + "Parours en profondeur du Graphe depuis le sommet " + node);
         ArrayList<Boolean> bl = parcourProfond(al, al.getNodeOfList(al.makeNode(node)));
         for (int i = 0; i < bl.size(); i++) {
@@ -137,6 +129,7 @@ public class GraphToolsList extends GraphTools {
             System.out.println(bl.get(i) ? "Parcouru" : "Non parcouru");
         }
 
+        System.out.println(System.lineSeparator() + "Question 21");
         System.out.println(System.lineSeparator() + "Parours en largeur du Graphe depuis le sommet " + node);
         bl = parcourEnLargeur(al, al.getNodeOfList(al.makeNode(node)));
         for (int i = 0; i < bl.size(); i++) {
@@ -145,16 +138,43 @@ public class GraphToolsList extends GraphTools {
             System.out.println(bl.get(i) ? "Parcouru" : "Non parcouru");
         }
 
+        System.out.println(System.lineSeparator() + "Question 22");
+        System.out.println("\t 1)");
         System.out.println(System.lineSeparator() + "exploration du graphe");
-        Long[] fin = al.explorerGraphe();
+        Long[] fin = al.explorerGrapheG();
         for (int i = 0; i < fin.length ; i++) {
             System.out.println("fin[" + i + "] => " + fin[i]);
         }
 
+        System.out.println(System.lineSeparator() + "Question 22");
+        System.out.println("\t 2)");
         System.out.println(System.lineSeparator() + "inversion du graphe");
         al = (DirectedGraph<DirectedNode>) al.computeInverse();
         System.out.println(al);
 
+        // je crée un tableau contenant l'ordre des noeuds de fin dans l'ordre décroissant
+        int[] sortedFinNode = new int[fin.length];
+        for (int i = 0; i < fin.length ; i++) {
+            int max = i;
+            for (int j = 0; j < fin.length ; j++) {
+                if (j != i)
+                    if (fin[j] > fin[i])
+                        max = j;
+            }
+            sortedFinNode[i] = max;
+            fin[max] = Long.MIN_VALUE;
+        }
 
+        System.out.println(System.lineSeparator() + "Question 22");
+        System.out.println("\t 3)");
+        System.out.println(System.lineSeparator() + "exploration du graphe complémentaire");
+        Long[] finComplG = al.explorerGrapheComplG(sortedFinNode);
+        for (int i = 0; i < fin.length ; i++) {
+            System.out.println("sortedFin[" + i + "] => " + finComplG[i]);
+        }
+
+
+        System.out.println(System.lineSeparator() + "Question 23");
+        System.out.println("On constate que l'exploration du graphe complémentaire est plus rapide.");
     }
 }
