@@ -6,6 +6,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.BiConsumer;
 
+import Abstraction.IDirectedGraph;
 import Abstraction.IGraph;
 import AdjacencyList.DirectedGraph;
 import AdjacencyList.DirectedValuedGraph;
@@ -145,9 +146,15 @@ public class GraphToolsList extends GraphTools {
         }
 
         System.out.println(System.lineSeparator() + "exploration du graphe");
-        al.explorerGraphe();
+        Long[] fin = al.explorerGraphe();
+        for (int i = 0; i < fin.length ; i++) {
+            System.out.println("fin[" + i + "] => " + fin[i]);
+        }
 
         System.out.println(System.lineSeparator() + "inversion du graphe");
-        al.computeInverse();
+        al = (DirectedGraph<DirectedNode>) al.computeInverse();
+        System.out.println(al);
+
+
     }
 }
