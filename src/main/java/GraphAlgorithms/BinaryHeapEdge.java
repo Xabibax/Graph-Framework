@@ -268,18 +268,22 @@ public class BinaryHeapEdge<A> {
         int m = k;
         int min = 2;
         int max = 20;
+
+		System.out.println(System.lineSeparator() + "Affichage des insertions des noeuds dans le graphe :");
 		while (k > 0) {
 			int rand = min + (int) (Math.random() * ((max - min) + 1));
 			System.out.print("insert " + rand + " | ");
 			jarjarBin.insert(new DirectedNode(k), new DirectedNode(k+30), rand);
 			k--;
 		}
-		System.out.println("");
 
-		System.out.println(jarjarBin);
+		System.out.println(System.lineSeparator() + System.lineSeparator() +
+				"Affichage des arrêtes et du graphe obtenu :" + System.lineSeparator() +  jarjarBin);
 		jarjarBin.lovelyPrinting();
 
 		jarjarBin.remove();
+		System.out.println(System.lineSeparator() + "Affichage des arrêtes et du graphe après avoir retiré " +
+				"le sommet racine :" + System.lineSeparator() +  jarjarBin);
 		jarjarBin.lovelyPrinting();
 
 		List<DirectedNode> jarjarBinList = new ArrayList<>();
@@ -300,14 +304,10 @@ public class BinaryHeapEdge<A> {
 
 		BinaryHeapEdge<DirectedNode> lol = new BinaryHeapEdge<>();
 		lol.algoPRIM(jarjarBinList, jarjarBinListTriple, 0);
-		System.out.println("");
 
-		System.out.println(lol);
+		System.out.println(System.lineSeparator() + "Affichage des valeurs des arrêtes et du graphe après " +
+				"l'exécution de l'algorithme PRIM :" + System.lineSeparator() + lol);
 		lol.lovelyPrinting();
-
-		lol.lovelyPrinting();
-
-
 
 		System.out.println(lol.test());
 	}
