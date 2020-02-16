@@ -53,7 +53,7 @@ public class AdjacencyMatrixDirectedValuedGraph extends AdjacencyMatrixDirectedG
 	@Override
 	public void removeArc(AbstractNode from, AbstractNode to) {
 		super.removeArc(from, to);
-		// A completer
+		if (this.isArc(from, to)) this.matrixCosts[from.getLabel()][to.getLabel()] = 0;
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class AdjacencyMatrixDirectedValuedGraph extends AdjacencyMatrixDirectedG
      */
 	public void addArc(AbstractNode from, AbstractNode to, int cost ) {
 		super.addArc(from,to);
-		// A completer
+		if (this.matrixCosts[from.getLabel()][to.getLabel()] >= 0) this.matrixCosts[from.getLabel()][to.getLabel()] = cost;
 	}
 	
 	public String toString() {
@@ -81,6 +81,5 @@ public class AdjacencyMatrixDirectedValuedGraph extends AdjacencyMatrixDirectedG
         int[][] matrixValued = GraphTools.generateValuedGraphData(10, false, false, true, false, 100001);
 		AdjacencyMatrixDirectedValuedGraph am = new AdjacencyMatrixDirectedValuedGraph(matrix, matrixValued);
 		System.out.println(am);
-		// A completer
 	}
 }

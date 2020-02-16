@@ -72,22 +72,23 @@ public class UndirectedGraph<A extends UndirectedNode> extends AbstractListGraph
     }
 
     @Override
-    public boolean isEdge(A x, A y) {    
-        // A completer
-    	return true;
+    public boolean isEdge(A x, A y) {
+	    return this.getNodes().get(x.getLabel()).getNeighbours().containsKey(this.nodes.get(y.getLabel()));
     }
 
     @Override
     public void removeEdge(A x, A y) {
     	if(isEdge(x,y)){
-    		// A completer
+            this.getNodes().get(x.getLabel()).getNeighbours().remove(this.nodes.get(y.getLabel()));
+            this.getNodes().get(y.getLabel()).getNeighbours().remove(this.nodes.get(x.getLabel()));
     	}
     }
 
     @Override
     public void addEdge(A x, A y) {
     	if(!isEdge(x,y)){
-    		// A completer
+            this.getNodes().get(x.getLabel()).getNeighbours().put(this.nodes.get(y.getLabel()),1);
+            this.getNodes().get(y.getLabel()).getNeighbours().put(this.nodes.get(x.getLabel()),1);
     	}
     }
 
@@ -118,7 +119,11 @@ public class UndirectedGraph<A extends UndirectedNode> extends AbstractListGraph
     @Override
     public int[][] toAdjacencyMatrix() {
         int[][] matrix = new int[order][order];
-        // A completer
+        for (A node : this.getNodes()) {
+            for (int i = 0; i < order; i++) {
+                matrix[node.getLabel()][i] = node.getNeighbours().containsKey(this.nodes.get(i)) ? 1 : 0;
+            }
+        }
         return matrix;
     }
 
@@ -141,7 +146,6 @@ public class UndirectedGraph<A extends UndirectedNode> extends AbstractListGraph
         GraphTools.afficherMatrix(mat);
         UndirectedGraph al = new UndirectedGraph(mat);
         System.out.println(al);
-        // A completer
     }
 
 }
